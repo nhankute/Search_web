@@ -1,0 +1,74 @@
+{% load static %}
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<!-- Basic thing in HTML -->
+		<meta charset="utf-8">
+	    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	    <link rel="icon" href="{% static 'img/favicon.png' %}">
+
+	    <!-- Bootstrap core CSS -->
+	    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+
+
+		<title>Boogle</title>
+	</head>	 	
+
+	<body onload="draw()">
+		{% if request.GET.search %}
+	    <!-- Bootstrap result CSS -->
+	    <link href="{% static 'css/result.css' %}" rel="stylesheet">
+	     <!-- Bootstrap result JS -->
+
+		<form method="get" action="{% url 'document' %}">
+			<div class="form-searching" style="margin: 20px">
+					<a href="{% url 'document' %}" title="Go to Boogle home" id="logo" data-hveid="3">
+						<img src="{% static 'img/Boogle.png' %}" alt="Boogle" height=50 width="120">
+					</a>
+					<input onchange="draw()" id="search-field" name="search" onfocus="this.value='{{request.GET.search}}'" value="{{request.GET.search}}"/>
+
+					<button class="search-button" onclick="searchIt()" id="search">Search</button>
+				
+			</div>
+
+			<h1>{{message}}</h1>
+
+		</form>
+		<div id="check">Tìm thấy: <span id="checkCount">{{length}} kết quả</span></div>
+		<div id="result">
+			<ul>
+				{% for each in document %}
+                    <li><a href="/{{ each.0 }}" >{{ each.0 }}.txt - {{ each.2 }}</a></li>
+
+                    {{ each.1|truncatechars:157|cut:"<QuerySet [<Post:" }}<br/>
+				{% endfor %}
+
+			</ul>
+		</div>
+
+			
+		{% else %}
+	    <!-- Bootstrap result CSS -->
+	    <link href="{% static 'css/result.css' %}" rel="stylesheet">
+		<form class="form-searching">
+			
+			<form method="get" action="{% url 'document' %}">
+				<div id="header">
+					Boogle
+				</div>
+
+				<input onchange="draw()" id="search-field" name="search" onfocus="this.value='{{request.GET.search}}'" value="Enter your query"/>
+				<br>
+					<button onclick="searchIt()" id="search">Search</button>
+				<br>
+				<canvas id="canvas" width="1000" height="100"></canvas>
+				<div id="check">Checks: <span id="checkCount">0</span></div>
+				<div id="result"></div>
+
+			</form>	
+	    </form>
+		{% endif %}
+
+	</body>
+</html>
